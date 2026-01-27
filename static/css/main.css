@@ -1,112 +1,299 @@
-@import "./styles.css";
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,600&display=swap');
 
-
-:root{
-    --h-title-color:#3948d2;
+* { box-sizing: border-box; }
+body, html {
+    margin: 0; padding: 0;
+    font-family: 'Newsreader', serif; /* 正式易读衬线体 */
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: 300;
+    background-color: #fff;
 }
 
-.header {
-    border-bottom: solid 2px var(--bs-blue);
-    z-index: 10000;
+/* 导航栏 */
+.fixed-nav {
+    position: fixed; top: 30px; left: 50px; right: 50px;
+    display: flex; justify-content: space-between;
+    z-index: 10000; mix-blend-mode: difference; color: white;
 }
+.fixed-nav a { color: inherit; text-decoration: none; }
 
-.bg-bottom {
-    background-color: var(--h-title-color);
-}
-
-.top-section {
+/* 背景图逻辑 */
+.book-scroll-bg {
+    width: 100%; min-height: 100vh;
+    background-image: url('../assets/img/book-bg.jpg');
+    background-size: 100% auto;
+    background-position: top center;
+    background-attachment: fixed;
     position: relative;
-    padding: 10rem 0;
-    background-position: center;
-    background-size: cover;
-    height: 25rem;
 }
 
-.top-section h2 {
-    font-weight: 400;
+/* 布局基础 */
+.page-pair { display: flex; width: 100vw; min-height: 100vh; position: relative; }
+.left-page, .right-page { width: 50%; display: flex; position: relative; }
+
+/* 图片物理吸附 */
+.zoom-trigger img, .index-item img {
+    width: 100%; height: auto; mix-blend-mode: multiply; display: block;
+}
+.zoom-trigger img { cursor: zoom-in; }
+
+/* 精准对齐 */
+.full-hit { padding: 0 !important; justify-content: flex-end; align-items: flex-start; }
+.work-2-spacing { justify-content: flex-end; padding-left: 20%; padding-right: 5%; align-items: center; }
+.spine-hit { justify-content: flex-start; padding-left: 0; align-items: center; }
+.spine-hit img { max-width: 85%; }
+
+/* Profile 居中加粗 */
+.profile-container { justify-content: center; align-items: center; text-align: center; flex-direction: column; }
+.profile-content p { margin: 15px 0; font-size: 11px; }
+.profile-content strong { font-weight: 600; color: #000; letter-spacing: 0.1em; }
+
+/* Index 靠左排版 */
+.index-left-box { padding: 100px 50px; flex-direction: column; align-items: flex-start; }
+.index-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 40px; width: 100%; }
+.meta { margin-top: 10px; line-height: 1.6; }
+.meta strong { font-weight: 600; display: block; margin-bottom: 4px; }
+
+/* 灯箱 */
+.lightbox {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #fff; z-index: 20000; justify-content: center; align-items: center;
+}
+.lightbox img { max-width: 90%; max-height: 90%; mix-blend-mode: multiply; }
+
+/* --- 1. 统一写真集正式字体 --- */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,600&display=swap');
+
+.profile-fold-container {
+    display: flex;
+    width: 100vw;
+    min-height: 60vh; /* 给予足够的上下空间 */
+    align-items: center;
+    /* 核心：让文字像油墨一样吸附背景的明暗 */
+    mix-blend-mode: multiply; 
+    opacity: 0.9;
 }
 
-.top-section .top-section-content {
-    position: relative;
-    z-index: 1;
+/* 共有文字样式 */
+.profile-fold-container p {
+    font-family: 'Newsreader', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    font-weight: 300;
+    color: #1a1a1a;
+    margin: 10px 0;
+    line-height: 1.8;
 }
 
-.top-section:before {
-    content: "";
+/* 关键信息加粗 */
+.profile-fold-container strong {
+    font-weight: 600;
+    color: #000;
+}
+
+/* --- 2. 物理卷入对齐（重点） --- */
+
+.fold-left {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end; /* 靠右对齐，贴向中线 */
+    padding-right: 20px;       /* 这里的间距决定了文字离折痕有多近 */
+    text-align: right;
+}
+
+.fold-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 20px;        /* 这里的间距决定了文字离折痕有多近 */
+    text-align: left;
+}
+
+/* =========================================
+   核心：实体书物理光影增强系统
+   ========================================= */
+
+/* 1. 基础设置：让图片更好地与纸张融合 */
+.zoom-trigger img, .index-item img {
+    /* 稍微降低不透明度，让纸张纤维感透出来 */
+    opacity: 0.92; 
+    /* 给图片边缘增加极细微的内阴影，消除数码照片的锋利切割感，让边缘更柔和 */
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.2);
+    /* 确保混合模式开启 */
+    mix-blend-mode: multiply;
+    display: block;
+}
+
+/* 2. 创建光影容器：确保伪元素相对于图片容器定位 */
+.zoom-trigger, .index-item {
+    position: relative; /* 关键：作为定位基准 */
+    display: block;
+    line-height: 0; /* 消除图片底部的潜在空隙 */
+}
+
+/* 3. 通用阴影层：在图片上方创建一个覆盖层 */
+.zoom-trigger::after, .index-item::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* 关键：阴影层也要用 multiply，这样阴影是“渗”进纸里的，不是浮在上面的灰雾 */
+    mix-blend-mode: multiply;
+    pointer-events: none; /* 确保鼠标能穿透阴影层点击到图片进行放大 */
+    z-index: 2; /* 确保在图片上方 */
 }
 
-section header h2{
-    font-family: "Kanit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
-    color: var(--h-title-color);
-    font-size: 2.3rem;
-    line-height: 4rem;
+/* =========================================
+   针对不同位置的定制阴影 (模拟书页弯曲)
+   ========================================= */
+
+/* --- 情况 A：图片在左页，右侧边缘撞击中线 --- */
+/* 适用对象：Work 1, Work 3 等处于左页贴边的图片 */
+.left-page.full-hit .zoom-trigger::after,
+/* 如果你用了上一个版本的 HTML 结构，可能需要下面这个选择器 */
+.work-box.work-2 .zoom-trigger::after 
+{
+    /* 创建一个从左到右的渐变：左边透明，最右边(中线处)是半透明黑色 */
+    background: linear-gradient(to right, 
+        rgba(255,255,255,0) 60%,  /* 大部分区域是亮的 */
+        rgba(0,0,0,0.05) 85%,     /* 开始轻微变暗 */
+        rgba(0,0,0,0.3) 100%);    /* 中线处最暗，模拟卷入感 */
 }
 
-section .main-body{
-    font-size: 1.3rem;
-    font-weight: 200;
-    line-height: 2.4rem;
+/* --- 情况 B：图片在右页，左侧边缘撞击中线 --- */
+/* 适用对象：Work 4 (spine-hit) 等处于右页贴中线的图片 */
+.right-page.spine-hit .zoom-trigger::after,
+.right-page.full-hit .zoom-trigger::after,
+/* 如果你用了上一个版本的 HTML 结构，可能需要下面这个选择器 */
+.work-box.work-4 .zoom-trigger::after
+{
+    /* 创建一个从右到左的渐变：右边透明，最左边(中线处)是半透明黑色 */
+    background: linear-gradient(to left, 
+        rgba(255,255,255,0) 60%,  /* 大部分区域是亮的 */
+        rgba(0,0,0,0.05) 85%,     /* 开始轻微变暗 */
+        rgba(0,0,0,0.3) 100%);    /* 中线处最暗，模拟卷入感 */
 }
 
-
-.bg-gradient-primary-to-secondary-light {
-    background: linear-gradient(45deg, #fcfcfc, #ffffff) !important;
-}
-
-.bg-gradient-primary-to-secondary-gray {
-    background: linear-gradient(45deg, #f0f0f0, #f1f1f1) !important;
-}
+/* --- 情况 C：远离中线的图片 (如 Work 2) --- */
+/* 这种图片比较平，只需要整体轻微压暗一点点，或者不需要额外阴影，保持现状即可 */
+.work-2-spacing .zoom-trigger::after 
+    /* 可选：如果觉得太亮，可以加一个极淡的整体阴影 */
+    /* background: rgba(0,0,0,0.02); */
 
 
+/* =========================================
+   终极质感升级：实体书纸张微反光系统
+   ========================================= */
 
-.on-top {
+/* 1. 确保父容器是定位基准 (如果之前加过可以忽略) */
+.zoom-trigger, .index-item {
     position: relative;
-    z-index: 10000;
+    display: block;
 }
 
-.top-bg {
-    background-position: center;
-    background-size: fill;
-    width: 100%;
-    height: 100%;
-}
-
-.top-bg::before {
-    content: "";
+/* 2. 创建高光层 (使用 ::before 伪元素) */
+.zoom-trigger::before, .index-item::before {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; /* 确保鼠标能穿透 */
+    z-index: 3; /* 关键：层级要高于阴影层(z-index:2)，光在最上面 */
+
+    /* --- 核心魔法：柔光混合模式 --- */
+    /* soft-light 会像光线打在物体上一样，温润地提亮高光区域 */
+    mix-blend-mode: soft-light;
+
+    /* --- 核心魔法：模拟自然光照的渐变 --- */
+    /* 创建一个带有角度的线性渐变，模拟一束柔和的光从左上方掠过纸面的效果 */
+    background: linear-gradient(
+        115deg, /* 光照角度 */
+        transparent 20%,                  /* 开始是透明 */
+        rgba(255, 255, 255, 0.15) 40%,    /* 逐渐出现极淡的白光 */
+        rgba(255, 255, 255, 0.4) 55%,     /* 核心高光区（最亮反光点） */
+        rgba(255, 255, 255, 0.15) 70%,    /* 光线逐渐减弱 */
+        transparent 90%                   /* 结束透明 */
+    );
+
+    /* --- 控制反光强度 --- */
+    /* 如果觉得反光太强太油腻，把这个数值调小 (例如 0.4) */
+    /* 如果觉得不够通透，把这个数值调大 (例如 0.8) */
+    opacity: 0.65;
+}
+
+/* =========================================
+   (可选) 针对靠近书脊的图片增强弧形反光
+   ========================================= */
+/* 当纸张卷入书脊时，在阴影旁边通常会有一道较亮的反光带 */
+
+/* 左页贴中线的图片：在右侧边缘增加一道高光 */
+.left-page.full-hit .zoom-trigger::before {
+     background: linear-gradient(
+        to right,
+        transparent 70%,
+        rgba(255,255,255,0.3) 95%, /* 在靠近中线阴影前的一点点地方最亮 */
+        transparent 100%
+    );
+    opacity: 0.5;
+}
+
+/* 右页贴中线的图片：在左侧边缘增加一道高光 */
+.right-page.spine-hit .zoom-trigger::before {
+     background: linear-gradient(
+        to left,
+        transparent 70%,
+        rgba(255,255,255,0.3) 95%, /* 在靠近中线阴影前的一点点地方最亮 */
+        transparent 100%
+    );
+    opacity: 0.5;
 }
 
 
-#avatar {
-    position: relative;
-    height: 0;
-    top:min(-65px,max(-100px,calc(-1*100vw/12)));
-    max-width: 55em;
-    margin: 0 1.5rem 0 0;
-    float: right;
-    z-index: 9000;
-}
+/* --- 移动端自动优化补丁 --- */
+@media (max-width: 768px) {
+    .book-scroll-bg {
+        height: auto !important; /* 让背景随内容拉长 */
+        min-height: 100vh;
+        background-attachment: scroll; /* 手机端背景固定会卡顿，改为随动 */
+        background-size: 200% auto;
+    }
 
-#avatar img {
-    height: max(130px,min(200px,calc(100vw/6)));
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
-}
+    /* 将所有图片改为垂直单列排列 */
+    .work-unit {
+        position: relative !important;
+        width: 90% !important;
+        left: 5% !important;
+        top: 0 !important;
+        margin-top: 50px;
+        text-align: left !important;
+    }
 
-@media screen and (max-width: 991px) {
-    #avatar {
-        margin: 0;
+    /* Profile 手机版对齐 */
+    .profile-section {
+        position: relative !important;
+        top: 0 !important;
+        flex-direction: column;
+        padding: 50px 0;
+    }
+    .profile-left, .profile-right {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Index 手机版对齐 */
+    .index-section-left {
+        position: relative !important;
+        width: 95% !important;
+        left: 0 !important;
+        padding: 50px 2.5%;
+    }
+    .index-row {
+        flex-direction: column;
+    }
+    .index-col {
+        width: 100% !important;
+        margin-bottom: 40px;
     }
 }
-
-
