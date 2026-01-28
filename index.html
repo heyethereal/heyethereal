@@ -2,6 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HEYe｜eTHEREAL</title>
     <link type="text/css" href="static/css/main.css" rel="stylesheet" />
 </head>
@@ -17,32 +18,42 @@
     <div class="book-scroll-bg">
         <div class="page-pair">
             <div class="left-page full-hit">
+                <div class="zoom-trigger"><img src="static/assets/img/work0.jpeg"></div>
+            </div>
+            <div class="right-page"></div>
+        </div>
+        
+        <div class="page-pair">
+            <div class="left-page full-hit">
                 <div class="zoom-trigger"><img src="static/assets/img/work1.jpeg"></div>
             </div>
             <div class="right-page"></div>
         </div>
-
-        <div class="page-pair">
-            <div class="left-page"></div>
-            <div class="right-page work-2-spacing">
+        
+        <div class="page-pair work-spacing-row"> 
+            <div class="left-page full-hit">
                 <div class="zoom-trigger"><img src="static/assets/img/work2.jpeg"></div>
             </div>
-        </div>
-
-        <div class="page-pair">
-            <div class="left-page full-hit">
+            <div class="right-page full-hit">
                 <div class="zoom-trigger"><img src="static/assets/img/work3.jpeg"></div>
             </div>
-            <div class="right-page"></div>
-        </div>
-
-        <div class="page-pair">
-            <div class="left-page"></div>
-            <div class="right-page spine-hit">
+            </div>
+            
+        <div class="page-pair work-spacing-row">
+            <div class="left-page full-hit">
                 <div class="zoom-trigger"><img src="static/assets/img/work4.jpeg"></div>
             </div>
-        </div>
+            <div class="right-page full-hit">
+                <div class="zoom-trigger"><img src="static/assets/img/work5.jpeg"></div>
+             </div>
+            </div>
         
+        <div class="page-pair work-full-width">
+            <div class="full-page-container">
+                <div class="zoom-trigger"><img src="static/assets/img/work6.jpeg"></div>
+            </div>
+            </div>
+
         <div id="information" class="profile-fold-container">
     <div class="fold-left">
         <p>PROFILE CONTACT :</p>
@@ -53,30 +64,55 @@
     </div>
 </div>
 
-        <div id="index" class="page-pair">
-            <div class="left-page index-left-box">
-                <div class="index-grid">
-                    <div class="index-item">
-                        <img src="static/assets/img/work1.jpeg">
-                        <div class="meta"><strong>竹囿天地</strong>TOKYO</div>
-                    </div>
-                    <div class="index-item">
-                        <img src="static/assets/img/work2.jpeg">
-                        <div class="meta"><strong>SAMPLE TITLE</strong>LOCATION</div>
-                    </div>
-                    <div class="index-item">
-                        <img src="static/assets/img/work3.jpeg">
-                        <div class="meta"><strong>WORK THREE</strong>NEW YORK</div>
-                    </div>
+<div id="index" class="page-pair index-section">
+        
+        <div class="left-page index-page-container">
+            <div class="index-row">
+                <div class="index-item work-left">
+                    <img src="static/assets/img/work1.jpeg">
+                    <div class="meta"><strong>竹囿天地</strong>TOKYO</div>
+                </div>
+                <div class="index-item work-right">
+                    <img src="static/assets/img/work2.jpeg">
+                    <div class="meta"><strong>SAMPLE TITLE</strong>LOCATION</div>
                 </div>
             </div>
-            <div class="right-page"></div>
+            <div class="index-row">
+                <div class="index-item work-left">
+                    <img src="static/assets/img/work3.jpeg">
+                    <div class="meta"><strong>WORK THREE</strong>NEW YORK</div>
+                </div>
+                <div class="index-item work-right">
+                    <img src="static/assets/img/work4.jpeg">
+                    <div class="meta"><strong>WORK FOUR</strong>LONDON</div>
+                </div>
+            </div>
         </div>
+
+        <div class="right-page index-page-container">
+            <div class="index-row">
+                <div class="index-item work-left">
+                    <img src="static/assets/img/work5.jpeg">
+                    <div class="meta"><strong>WORK FIVE</strong>PARIS</div>
+                </div>
+                <div class="index-item work-right">
+                    <img src="static/assets/img/work6.jpeg">
+                    <div class="meta"><strong>WORK SIX</strong>BEIJING</div>
+                </div>
+            </div>
+            </div>
     </div>
+        
+
+          <footer class="site-footer">
+            <p>© 2024-2026 HE YE ALL RIGHTS RESERVED.</p>
+        </footer>
 
     <div id="lightbox" class="lightbox" onclick="this.style.display='none'; document.body.style.overflow='auto';">
         <img id="lightbox-img" src="">
     </div>
+
+
 
     <script>
         document.querySelector('.nav-left a').onclick = (e) => {

@@ -1,14 +1,16 @@
+/* --- 1. 基础全局设置 --- */
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,600&display=swap');
 
 * { box-sizing: border-box; }
 body, html {
     margin: 0; padding: 0;
-    font-family: 'Newsreader', serif; /* 正式易读衬线体 */
+    font-family: 'Newsreader', serif;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.3em;
     font-weight: 300;
     background-color: #fff;
+    overflow-x: hidden;
 }
 
 /* 导航栏 */
@@ -29,271 +31,246 @@ body, html {
     position: relative;
 }
 
-/* 布局基础 */
+/* --- 2. BODY 展示区布局 (极致对齐与无缝) --- */
 .page-pair { display: flex; width: 100vw; min-height: 100vh; position: relative; }
 .left-page, .right-page { width: 50%; display: flex; position: relative; }
 
-/* 图片物理吸附 */
-.zoom-trigger img, .index-item img {
-    width: 100%; height: auto; mix-blend-mode: multiply; display: block;
+/* 强制中缝对接：Work 2&3, 4&5 专用 */
+.work-spacing-row { align-items: flex-start !important; }
+.work-spacing-row .left-page.full-hit { justify-content: flex-end; padding: 0 !important; }
+.work-spacing-row .right-page.full-hit { justify-content: flex-start; padding: 0 !important; }
+
+/* 图片基础样式 */
+.zoom-trigger { width: 100%; position: relative; display: block; line-height: 0; }
+.zoom-trigger img { 
+    width: 100%; height: auto; 
+    mix-blend-mode: multiply; 
+    display: block; 
+    cursor: zoom-in;
+    opacity: 0.95;
 }
-.zoom-trigger img { cursor: zoom-in; }
 
-/* 精准对齐 */
-.full-hit { padding: 0 !important; justify-content: flex-end; align-items: flex-start; }
-.work-2-spacing { justify-content: flex-end; padding-left: 20%; padding-right: 5%; align-items: center; }
-.spine-hit { justify-content: flex-start; padding-left: 0; align-items: center; }
-.spine-hit img { max-width: 85%; }
+/* Work 6 这种跨全页的特殊处理 */
+.work-full-width { display: block !important; width: 100vw; }
+.full-page-container { width: 100%; position: relative; }
+.work-full-width img { width: 100%; mix-blend-mode: multiply; }
 
-/* Profile 居中加粗 */
-.profile-container { justify-content: center; align-items: center; text-align: center; flex-direction: column; }
-.profile-content p { margin: 15px 0; font-size: 11px; }
-.profile-content strong { font-weight: 600; color: #000; letter-spacing: 0.1em; }
+/* --- 3. 物理阴影与折痕 (增强真实感) --- */
+/* 中缝折痕阴影：适用于跨页大图 */
+.work-full-width::after {
+    content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 100%; z-index: 2; pointer-events: none;
+    background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 45%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0) 100%);
+}
 
-/* Index 靠左排版 */
-.index-left-box { padding: 100px 50px; flex-direction: column; align-items: flex-start; }
-.index-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 40px; width: 100%; }
-.meta { margin-top: 10px; line-height: 1.6; }
+/* --- 4. PROFILE 部分 --- */
+.profile-fold-container {
+    display: flex; width: 100vw; min-height: 60vh; align-items: center;
+    mix-blend-mode: multiply;
+}
+.fold-left { width: 50%; text-align: right; padding-right: 40px; }
+.fold-right { width: 50%; text-align: left; padding-left: 40px; }
+.profile-fold-container p { font-size: 10px; line-height: 1.8; color: #1a1a1a; }
+.profile-fold-container strong { font-weight: 600; color: #000; }
+
+/* --- 5. INDEX 部分 (一面四张，顺次往右往底) --- */
+.index-section { padding-top: 100px; }
+.index-container {
+    width: 50%; /* 锁定在左半页 */
+    padding: 0 50px 100px 50px;
+    display: flex; flex-direction: column;
+}
+.index-row {
+    display: flex; justify-content: space-between;
+    width: 100%; margin-bottom: 60px;
+}
+.index-item { width: 45%; display: flex; flex-direction: column; }
+.index-item img { width: 100%; height: auto; mix-blend-mode: multiply; }
+.meta { margin-top: 10px; font-size: 9px; letter-spacing: 0.2em; text-transform: none; }
 .meta strong { font-weight: 600; display: block; margin-bottom: 4px; }
 
-/* 灯箱 */
+/* --- 6. 灯箱 & 适配 --- */
 .lightbox {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #fff; z-index: 20000; justify-content: center; align-items: center;
 }
 .lightbox img { max-width: 90%; max-height: 90%; mix-blend-mode: multiply; }
 
-/* --- 1. 统一写真集正式字体 --- */
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,600&display=swap');
-
-.profile-fold-container {
-    display: flex;
-    width: 100vw;
-    min-height: 60vh; /* 给予足够的上下空间 */
-    align-items: center;
-    /* 核心：让文字像油墨一样吸附背景的明暗 */
-    mix-blend-mode: multiply; 
-    opacity: 0.9;
+@media screen and (max-width: 768px) {
+    .book-scroll-bg { background-size: 200% auto; background-attachment: scroll; }
+    .page-pair { display: block; }
+    .left-page, .right-page { width: 100%; }
+    .index-container { width: 100%; padding: 20px; }
+    .work-full-width { width: 100vw; }
 }
 
-/* 共有文字样式 */
-.profile-fold-container p {
-    font-family: 'Newsreader', serif;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.35em;
-    font-weight: 300;
-    color: #1a1a1a;
-    margin: 10px 0;
-    line-height: 1.8;
-}
-
-/* 关键信息加粗 */
-.profile-fold-container strong {
-    font-weight: 600;
-    color: #000;
-}
-
-/* --- 2. 物理卷入对齐（重点） --- */
-
-.fold-left {
+/* Index 专用页面容器 */
+.index-page-container {
     width: 50%;
-    display: flex;
-    justify-content: flex-end; /* 靠右对齐，贴向中线 */
-    padding-right: 20px;       /* 这里的间距决定了文字离折痕有多近 */
-    text-align: right;
-}
-
-.fold-right {
-    width: 50%;
+    padding: 100px 50px; /* 这里的 50px 决定了图片离书边缘和中缝的距离 */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-left: 20px;        /* 这里的间距决定了文字离折痕有多近 */
-    text-align: left;
+    align-items: flex-start;
 }
 
-/* =========================================
-   核心：实体书物理光影增强系统
-   ========================================= */
+/* 行容器：强制两端对齐 */
+.index-row {
+    display: flex;
+    justify-content: space-between; /* 关键：一张贴左边，一张贴右边（中缝） */
+    width: 100%;
+    margin-bottom: 60px; /* 两行之间的距离 */
+}
 
-/* 1. 基础设置：让图片更好地与纸张融合 */
-.zoom-trigger img, .index-item img {
-    /* 稍微降低不透明度，让纸张纤维感透出来 */
-    opacity: 0.92; 
-    /* 给图片边缘增加极细微的内阴影，消除数码照片的锋利切割感，让边缘更柔和 */
-    box-shadow: inset 0 0 1px rgba(0,0,0,0.2);
-    /* 确保混合模式开启 */
+/* 单个索引项 */
+.index-item {
+    width: 45%; /* 这个宽度决定了 1和2 之间的距离，调大则距离变小 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 字体统一化 */
+.index-item .meta {
+    margin-top: 12px;
+    font-family: 'Newsreader', serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: none; /* 保持标题原始大小写 */
+    line-height: 1.5;
+}
+
+.index-item .meta strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.1em;
+}
+
+/* 强制图片比例不被裁切 */
+.index-item img {
+    width: 100%;
+    height: auto;
     mix-blend-mode: multiply;
     display: block;
 }
 
-/* 2. 创建光影容器：确保伪元素相对于图片容器定位 */
-.zoom-trigger, .index-item {
-    position: relative; /* 关键：作为定位基准 */
-    display: block;
-    line-height: 0; /* 消除图片底部的潜在空隙 */
+/* Index 专用页面容器：彻底清除内边距，实现贴边 */
+.index-page-container {
+    width: 50%;
+    padding: 100px 0; /* 上下保留留白，左右设为 0 */
+    display: flex;
+    flex-direction: column;
 }
 
-/* 3. 通用阴影层：在图片上方创建一个覆盖层 */
-.zoom-trigger::after, .index-item::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    /* 关键：阴影层也要用 multiply，这样阴影是“渗”进纸里的，不是浮在上面的灰雾 */
-    mix-blend-mode: multiply;
-    pointer-events: none; /* 确保鼠标能穿透阴影层点击到图片进行放大 */
-    z-index: 2; /* 确保在图片上方 */
+/* 行容器：确保宽度 100% 撑满单页 */
+.index-row {
+    display: flex;
+    justify-content: space-between; /* 强制一张贴左，一张贴右（中缝） */
+    width: 100%;
+    margin-bottom: 80px; /* 行与行之间的上下距离 */
 }
 
-/* =========================================
-   针对不同位置的定制阴影 (模拟书页弯曲)
-   ========================================= */
-
-/* --- 情况 A：图片在左页，右侧边缘撞击中线 --- */
-/* 适用对象：Work 1, Work 3 等处于左页贴边的图片 */
-.left-page.full-hit .zoom-trigger::after,
-/* 如果你用了上一个版本的 HTML 结构，可能需要下面这个选择器 */
-.work-box.work-2 .zoom-trigger::after 
-{
-    /* 创建一个从左到右的渐变：左边透明，最右边(中线处)是半透明黑色 */
-    background: linear-gradient(to right, 
-        rgba(255,255,255,0) 60%,  /* 大部分区域是亮的 */
-        rgba(0,0,0,0.05) 85%,     /* 开始轻微变暗 */
-        rgba(0,0,0,0.3) 100%);    /* 中线处最暗，模拟卷入感 */
+/* 单个索引项：这里 48% 能保证中间有一条极细的缝隙，同时两边贴死 */
+.index-item {
+    width: 48%; 
+    display: flex;
+    flex-direction: column;
 }
 
-/* --- 情况 B：图片在右页，左侧边缘撞击中线 --- */
-/* 适用对象：Work 4 (spine-hit) 等处于右页贴中线的图片 */
-.right-page.spine-hit .zoom-trigger::after,
-.right-page.full-hit .zoom-trigger::after,
-/* 如果你用了上一个版本的 HTML 结构，可能需要下面这个选择器 */
-.work-box.work-4 .zoom-trigger::after
-{
-    /* 创建一个从右到左的渐变：右边透明，最左边(中线处)是半透明黑色 */
-    background: linear-gradient(to left, 
-        rgba(255,255,255,0) 60%,  /* 大部分区域是亮的 */
-        rgba(0,0,0,0.05) 85%,     /* 开始轻微变暗 */
-        rgba(0,0,0,0.3) 100%);    /* 中线处最暗，模拟卷入感 */
-}
+/* 针对左页：1,3 贴最左，2,4 贴中缝 */
+.left-page.index-page-container .work-left { margin-left: 0; }
+.left-page.index-page-container .work-right { margin-right: 0; }
 
-/* --- 情况 C：远离中线的图片 (如 Work 2) --- */
-/* 这种图片比较平，只需要整体轻微压暗一点点，或者不需要额外阴影，保持现状即可 */
-.work-2-spacing .zoom-trigger::after 
-    /* 可选：如果觉得太亮，可以加一个极淡的整体阴影 */
-    /* background: rgba(0,0,0,0.02); */
+/* 针对右页：5 贴中缝，6 贴最右 */
+.right-page.index-page-container .work-left { margin-left: 0; }
+.right-page.index-page-container .work-right { margin-right: 0; }
 
-
-/* =========================================
-   终极质感升级：实体书纸张微反光系统
-   ========================================= */
-
-/* 1. 确保父容器是定位基准 (如果之前加过可以忽略) */
-.zoom-trigger, .index-item {
+/* 给 Body 每一组对开页增加上下间距 */
+.page-pair {
+    display: flex;
+    width: 100vw;
+    min-height: auto; /* 取消强制 100vh，防止强制拉长 */
     position: relative;
-    display: block;
+    margin-bottom: 150px; /* 重点：这个数值越大，作品之间的上下留白就越多 */
 }
 
-/* 2. 创建高光层 (使用 ::before 伪元素) */
-.zoom-trigger::before, .index-item::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; /* 确保鼠标能穿透 */
-    z-index: 3; /* 关键：层级要高于阴影层(z-index:2)，光在最上面 */
-
-    /* --- 核心魔法：柔光混合模式 --- */
-    /* soft-light 会像光线打在物体上一样，温润地提亮高光区域 */
-    mix-blend-mode: soft-light;
-
-    /* --- 核心魔法：模拟自然光照的渐变 --- */
-    /* 创建一个带有角度的线性渐变，模拟一束柔和的光从左上方掠过纸面的效果 */
-    background: linear-gradient(
-        115deg, /* 光照角度 */
-        transparent 20%,                  /* 开始是透明 */
-        rgba(255, 255, 255, 0.15) 40%,    /* 逐渐出现极淡的白光 */
-        rgba(255, 255, 255, 0.4) 55%,     /* 核心高光区（最亮反光点） */
-        rgba(255, 255, 255, 0.15) 70%,    /* 光线逐渐减弱 */
-        transparent 90%                   /* 结束透明 */
-    );
-
-    /* --- 控制反光强度 --- */
-    /* 如果觉得反光太强太油腻，把这个数值调小 (例如 0.4) */
-    /* 如果觉得不够通透，把这个数值调大 (例如 0.8) */
-    opacity: 0.65;
+/* 针对 Work 2&3, 4&5 的特殊间距逻辑 */
+.work-spacing-row {
+    margin-bottom: 200px; /* 如果你希望对开页之间留白更多，可以单独调大这个 */
 }
 
-/* =========================================
-   (可选) 针对靠近书脊的图片增强弧形反光
-   ========================================= */
-/* 当纸张卷入书脊时，在阴影旁边通常会有一道较亮的反光带 */
-
-/* 左页贴中线的图片：在右侧边缘增加一道高光 */
-.left-page.full-hit .zoom-trigger::before {
-     background: linear-gradient(
-        to right,
-        transparent 70%,
-        rgba(255,255,255,0.3) 95%, /* 在靠近中线阴影前的一点点地方最亮 */
-        transparent 100%
-    );
-    opacity: 0.5;
+/* 确保跨页大图 Work 6 也有足够的间距 */
+.work-full-width {
+    margin-top: 100px;
+    margin-bottom: 200px;
 }
 
-/* 右页贴中线的图片：在左侧边缘增加一道高光 */
-.right-page.spine-hit .zoom-trigger::before {
-     background: linear-gradient(
-        to left,
-        transparent 70%,
-        rgba(255,255,255,0.3) 95%, /* 在靠近中线阴影前的一点点地方最亮 */
-        transparent 100%
-    );
-    opacity: 0.5;
+.index-item .meta {
+    margin-top: 15px;
+    padding: 0 10px; /* 给文字一点点左右边距，不至于死贴图片边缘 */
+    font-family: 'Newsreader', serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: none; /* 保护大小写 */
 }
 
-
-/* --- 移动端自动优化补丁 --- */
-@media (max-width: 768px) {
-    .book-scroll-bg {
-        height: auto !important; /* 让背景随内容拉长 */
-        min-height: 100vh;
-        background-attachment: scroll; /* 手机端背景固定会卡顿，改为随动 */
-        background-size: 200% auto;
-    }
-
-    /* 将所有图片改为垂直单列排列 */
-    .work-unit {
-        position: relative !important;
-        width: 90% !important;
-        left: 5% !important;
-        top: 0 !important;
-        margin-top: 50px;
-        text-align: left !important;
-    }
-
-    /* Profile 手机版对齐 */
-    .profile-section {
-        position: relative !important;
-        top: 0 !important;
-        flex-direction: column;
-        padding: 50px 0;
-    }
-    .profile-left, .profile-right {
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    /* Index 手机版对齐 */
-    .index-section-left {
-        position: relative !important;
-        width: 95% !important;
-        left: 0 !important;
-        padding: 50px 2.5%;
-    }
-    .index-row {
-        flex-direction: column;
-    }
-    .index-col {
-        width: 100% !important;
-        margin-bottom: 40px;
-    }
+.site-footer {
+    clear: both;             /* 强制换行，不受上面左右页的影响 */
+    width: 100vw !important; /* 强制铺满全屏宽度 */
+    padding: 150px 0 100px 0;
+    margin: 0 !important;
+    display: block !important; /* 改为块级元素 */
+    text-align: center !important; 
+    position: relative;
+    left: 0;
 }
+
+.site-footer p {
+    margin: 0 auto !important;
+    display: inline-block;
+    width: 100%;
+    font-family: 'Newsreader', serif;
+    font-size: 9px;
+    letter-spacing: 0.5em;
+    color: #888;
+    mix-blend-mode: multiply;
+    text-align: center !important;
+}
+
+.book-scroll-bg {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url('../assets/img/book-bg.jpg');
+    background-size: cover;       /* 方案 A: 覆盖全屏 */
+    /* 或者 */
+    background-repeat: repeat-y; /* 方案 B: 如果纸张纹理允许，纵向重复 */
+    background-position: top center;
+    background-attachment: fixed;
+}
+.book-scroll-bg {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url('../assets/img/book-bg.jpg');
+    
+    /* 核心修改：让背景图在垂直方向重复平铺，填满内容增加后的所有高度 */
+    background-repeat: repeat-y; 
+    
+    /* 保持宽度 100% 适配 */
+    background-size: 100% auto;
+    
+    background-position: top center;
+    
+    /* 如果你想让背景随滚动条走（消除留白最稳妥的方法），请取消 fixed */
+    background-attachment: scroll; 
+    
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-scroll-bg {
+    /* 这个方案会强行拉伸背景图到内容的总高度，适合纹理比较模糊的纸张 */
+    background-size: 100% 100%; 
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+}
+
