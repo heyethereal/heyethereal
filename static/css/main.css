@@ -128,22 +128,6 @@ body, html {
     flex-direction: column;
 }
 
-/* 字体统一化 */
-.index-item .meta {
-    margin-top: 12px;
-    font-family: 'Newsreader', serif;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: none; /* 保持标题原始大小写 */
-    line-height: 1.5;
-}
-
-.index-item .meta strong {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 4px;
-    letter-spacing: 0.1em;
-}
 
 /* 强制图片比例不被裁切 */
 .index-item img {
@@ -204,14 +188,6 @@ body, html {
     margin-bottom: 200px;
 }
 
-.index-item .meta {
-    margin-top: 15px;
-    padding: 0 10px; /* 给文字一点点左右边距，不至于死贴图片边缘 */
-    font-family: 'Newsreader', serif;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: none; /* 保护大小写 */
-}
 
 .site-footer {
     clear: both;             /* 强制换行，不受上面左右页的影响 */
@@ -274,3 +250,602 @@ body, html {
     background-repeat: no-repeat;
 }
 
+/* --- 1. 封面轨道锁定 --- */
+.page-pair.work0 {
+    margin-top: 0 !important;
+    margin-bottom: 200px !important; 
+    height: 100vh;
+    width: 100vw;
+    position: relative; /* 确保文字以此为基准 */
+    overflow: hidden;    /* 关键：确保文字滑到容器底边时直接被切掉，不出界 */
+}
+
+.work0 .full-page-container {
+    height: 100%;
+    width: 100%;
+}
+
+.work0 .zoom-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+
+/* --- 1. 轨道层：确保文字有地方“沉” --- */
+.page-pair.work0 {
+    margin-top: 0 !important;
+    margin-bottom: 200px !important; 
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: visible !important; /* 允许溢出到底部白色区域 */
+}
+
+/* --- 2. 文字容器：白色、10rem、解决“不居中”的元凶 --- */
+.hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;    /* 撑满宽度，为 Flex 居中提供基础 */
+    height: 100%;   /* 撑满高度 */
+    
+    /* 核心：用 Flex 彻底锁死水平居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* 左右绝对居中 */
+    justify-content: center; /* 垂直初始居中 */
+    
+    color: #ffffff !important;
+    z-index: 100;
+    pointer-events: none;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.2);
+}
+
+
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .hero-title { font-size: 4rem; }
+    .hero-subtitle { font-size: 1.2rem; }
+}
+
+/* --- INDEX 文字：原地溶解 + 强制大写 + 滚动触发 (覆盖版) --- */
+
+/* 1. 初始状态：在此处锁死大写，并设定溶解起点 */
+.index-section .index-item .meta, 
+.index-section .index-item .meta strong {
+    /* 强制全大写，!important 确保不被之前的 text-transform: none 覆盖 */
+    text-transform: uppercase !important; 
+    
+    /* 溶解起点：不可见 + 模糊 */
+    opacity: 0;
+    filter: blur(15px);
+    letter-spacing: 0.3em;
+    
+    /* 动态过渡：3秒慢速，这是动态效果的灵魂 */
+    transition: 
+        opacity 3.0s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 3.0s cubic-bezier(0.16, 1, 0.3, 1),
+        letter-spacing 3.0s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    will-change: opacity, filter, letter-spacing;
+}
+
+/* 2. 触发状态：当 JS 加上 .is-visible 类时执行 */
+.index-section .index-item.is-visible .meta,
+.index-section .index-item.is-visible .meta strong {
+    opacity: 1 !important;
+    filter: blur(0px) !important;
+    letter-spacing: 0.15em !important;
+}
+
+/* 3. 级联延迟：让列表一行行优雅化开 */
+.index-row:nth-child(1) .index-item { transition-delay: 0.1s; }
+.index-row:nth-child(2) .index-item { transition-delay: 0.4s; }
+.index-row:nth-child(3) .index-item { transition-delay: 0.7s; }
+
+/* 初始状态：锁定大写、隐藏、模糊 */
+.index-item .meta, 
+.index-item .meta strong {
+    text-transform: uppercase !important; 
+    opacity: 0 !important;
+    filter: blur(15px) !important;
+    letter-spacing: 0.3em !important;
+    /* 过渡属性 */
+    transition: opacity 3s ease, filter 3s ease, letter-spacing 3s ease !important;
+}
+
+/* 激活状态：当类名出现时，变清晰 */
+/* 注意：这里的 .is-visible 是由 JS 动态加在 .index-item 上的 */
+.index-item.is-visible .meta,
+.index-item.is-visible .meta strong {
+    opacity: 1 !important;
+    filter: blur(0px) !important;
+    letter-spacing: 0.15em !important;
+}
+/* --- INDEX 文字：强制大写 + 呼吸溶解 (无模糊版) --- */
+.index-item .meta, 
+.index-item .meta strong {
+    text-transform: uppercase !important; 
+    opacity: 0;
+    letter-spacing: 0.5em; /* 初始字间距拉开，营造散开的意境 */
+    
+    /* 硬件加速，防止图片卡顿 */
+    will-change: opacity, letter-spacing;
+    
+    /* 3秒优雅溶解 */
+    transition: 
+        opacity 3.0s cubic-bezier(0.16, 1, 0.3, 1),
+        letter-spacing 3.0s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 激活态：无论滚动还是点击跳转，只要加上类名就溶解 */
+.index-item.is-visible .meta,
+.index-item.is-visible .meta strong {
+    opacity: 1 !important;
+    letter-spacing: 0.15em !important;
+}
+
+/* --- INDEX 文字：纯 CSS 强制原地溶解 (不卡图片) --- */
+
+.index-item .meta, 
+.index-item .meta strong {
+    /* 1. 锁死大写，无视全局 */
+    text-transform: uppercase !important; 
+    
+    /* 2. 初始状态：完全透明 */
+    opacity: 0;
+    letter-spacing: 0.3em;
+    
+    /* 3. 性能优化：强制开启硬件加速，保护图片不卡顿 */
+    backface-visibility: hidden;
+    will-change: opacity;
+
+    /* 4. 强制执行动画：无论滚动还是点击，页面加载即计算，但不立刻显示 */
+    /* 3s 溶解，延迟 0.5s 开始（防止页面刚加载时太忙导致卡顿） */
+    animation: forceDissolve 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 5. 级联入场：让列表有节奏地化开 */
+.index-row:nth-child(1) .index-item { animation-delay: 0.2s; }
+.index-row:nth-child(2) .index-item { animation-delay: 0.4s; }
+.index-row:nth-child(3) .index-item { animation-delay: 0.6s; }
+.index-row:nth-child(4) .index-item { animation-delay: 0.8s; }
+
+/* 核心动画定义：原地化开 */
+@keyframes forceDissolve {
+    0% {
+        opacity: 0;
+        letter-spacing: 0.4em;
+    }
+    100% {
+        opacity: 1;
+        letter-spacing: 0.15em;
+    }
+}
+
+/* 6. 针对点击 NAV 跳转的特殊修复 */
+/* 当通过 #index 跳转时，强制重置动画确保能看到过程 */
+:target .index-item .meta {
+    animation: none;
+    animation: forceDissolve 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Work 0 封面全屏化修正 --- */
+.work0 {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    overflow: hidden;
+}
+
+.cover-wrapper {
+    height: 100vh;
+    width: 100vw;
+}
+
+.cover-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover; /* 核心修改：像封面一样铺满，不留白 */
+    mix-blend-mode: multiply; /* 保持纸张质感渗透 */
+    opacity: 1;
+}
+
+/* ============================================================
+   精准修正：封面铺满与首张作品留白 (不影响其他效果)
+   ============================================================ */
+
+/* 1. 修正 Work 0：实现 object-fit 封面感并彻底消除底边缝隙 */
+.page-pair.work0 {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important; /* 消除外边距，防止断层 */
+    padding: 0 !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.work0 .full-page-container,
+.work0 .zoom-trigger {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.work0 img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* 像海报一样完美铺满 */
+    display: block;              /* 消除行内元素底缝 */
+    mix-blend-mode: multiply;
+}
+
+/* 2. 核心修正：拉开 Work 0 和 Work 1 之间的留白 */
+/* 注意：我们不给 work0 加 margin-bottom，
+   而是给 work-row-1 加 padding-top。
+   这样背景纸纹理是连续的，图片被推开产生“留白感”。
+*/
+.work-row-1 {
+    padding-top: 25vh !important; /* 这个数值决定了封面后第一张图出现的距离 */
+    margin-top: 0 !important;
+    min-height: auto !important;
+}
+
+/* 3. 错落效果微调 (确保不跟上面冲突) */
+.work-row-2-stagger {
+    margin-top: -30vh !important; /* 向上提，咬合 Work 1 */
+    z-index: 5;
+}
+
+.work-row-3-stagger {
+    margin-top: -10vh !important; /* 向上提，咬合 Work 2 */
+}
+
+/* --- 终极修正：彻底解决 Work 0 & 1 衔接与留白 --- */
+
+/* 1. 强制 Work 0 成为独立的海报层，不给任何白边机会 */
+.page-pair.work0 {
+    display: block !important; /* 强制取消 flex 带来的拉伸 */
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    line-height: 0 !important; /* 彻底杀掉图片下方的幽灵缝隙 */
+}
+
+.work0 .full-page-container,
+.work0 .zoom-trigger {
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.work0 img.cover-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* 核心：完美铺满 */
+    display: block !important;
+    margin: 0 !important;
+}
+
+/* 2. 重新拉开 Work 0 与 Work 1 的距离 */
+/* 如果之前没解决，是因为 .work-row-1 可能没在 HTML 里生效。
+   我们现在直接针对 work0 之后的“第一个作品”精准打击。
+*/
+.page-pair.work0 + .page-pair {
+    /* 在封面之后的第一个 page-pair 顶部撑开巨大的呼吸感 */
+    padding-top: 180px !important; 
+    margin-top: 0 !important;
+}
+
+/* 3. 确保背景纸纹理在留白处是连续的 */
+.book-scroll-bg {
+    background-attachment: scroll !important; /* 随滚动走，保证纹理不位移 */
+    display: block !important; /* 确保它是块级容器 */
+}
+
+
+/* --- 保留你的细节：8, 9 堆叠逻辑 --- */
+
+/* 8 (在上) */
+.stack-top {
+    width: 100%;
+    line-height: 0;
+}
+
+/* 9 (在下) - 这里控制 8和9 之间的留白 */
+.stack-btm {
+    width: 100%;
+    margin-top: 40px; /* 你的第一个留白点 */
+    line-height: 0;
+}
+
+/* 中间折痕 (横跨 8 和 9) - 你的第一个层级 */
+.stack-crease {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ⚠️ 核心：你的第二个留白点覆盖 */
+.stack-btm {
+    margin-top: 60px; /* 你的 60px 逻辑 */
+}
+
+/* 中缝阴影（横跨 8 和 9）- 你的第二个层级 */
+.stack-crease {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* --- 7, 8, 9, 10 核心对齐：在保留上述细节基础上修正显示 --- */
+
+.complex-layout-78910 {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    /* 🔴 确保中间的 8 和 9 垂直居中 */
+    width: 100vw;
+    min-height: 120vh;
+    position: relative;     
+    margin: 150px 0;
+}
+
+/* 7 贴左侧：修正定位 */
+.side-item.item-7 {
+    position: absolute;
+    left: 0;                
+    top: 50%;               /* 🔴 必须加，否则可能在顶部出界 */
+    transform: translateY(-50%);
+    width: 25vw;            
+    z-index: 10;
+    display: block !important; /* 🔴 强制显示 */
+}
+
+/* 10 贴右侧：修正定位 */
+.side-item.item-10 {
+    position: absolute;
+    right: 0;               
+    top: 50%;               /* 🔴 必须加 */
+    transform: translateY(-50%);
+    width: 25vw;            
+    z-index: 10;
+    display: block !important;
+}
+
+/* 8 和 9 保持在正中间堆叠 */
+.middle-stack {
+    width: 50vw;            
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+}
+
+/* 图片通用设置，防止被其他样式设为 0 */
+.complex-layout-78910 img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    mix-blend-mode: multiply;
+}
+
+
+/* 1. 必须解除父容器的禁闭 */
+.book-scroll-bg {
+    overflow: visible !important; 
+}
+
+/* 2. 必须给 7 和 10 建立“本地坐标轴” */
+.complex-layout-78910 {
+    position: relative !important; /* 没这一行，7 和 10 就会飞到网页开头 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* 3. 灵魂细节：既然 HTML 本质一样，我们就暴力锁定位置 */
+.item-7 {
+    position: absolute !important;
+    left: 0 !important;   /* 贴左 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20vw !important; /* 必须给宽度，不然 img 会塌陷 */
+}
+
+.item-10 {
+    position: absolute !important;
+    right: 0 !important;  /* 贴右 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20vw !important;
+}
+
+/* --- Index 部分图片初始化：黑白 --- */
+.index-item img {
+    filter: grayscale(100%);     /* 🔴 关键：完全灰度 */
+    transition: filter 0.6s ease; /* 丝滑过渡效果 */
+    display: block;
+    width: 100%;
+}
+
+/* --- 鼠标移动上去/悬停：恢复彩色 --- */
+.index-item:hover img {
+    filter: grayscale(0%);      /* 恢复彩色 */
+}
+
+/* 如果你希望图片在“进入视口”溶解时也是黑白的，直到鼠标去碰它，这样就够了 */
+
+
+/* 1. 强制重置 Index 区域的所有高度限制 */
+.index-section {
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    margin-top: -50px !important;  /* 🔴 尝试用负边距强行拉近距离 */
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* 2. 消除内部容器的撑开力 */
+.index-page-container {
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;    /* 🔴 撤销 flex 垂直居中带来的高度感 */
+    margin: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* 3. 针对 Work 9-12 所在的第二个 Section 特别处理 */
+.index-section + .index-section {
+    margin-top: -100px !important; /* 🔴 如果留白还是多，加大这个负数 */
+}
+
+/* 容器：固定在屏幕正中央 */
+.hero-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* 标题：进场 3s 落下溶解 */
+.hero-title {
+    color: #ffffff;
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 100;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    margin: 0;
+    text-transform: uppercase;
+    /* 修正歪斜的关键：spacing 和 indent 必须一致 */
+    letter-spacing: 0.8em;
+    text-indent: 0.8em; 
+    opacity: 0;
+    animation: slowDissolveDrop 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 副标题：找回并修正位置 */
+.hero-subtitle {
+    display: block !important;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    font-weight: 300;
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    opacity: 0;
+    animation: slowDissolveDrop 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.3s; /* 比标题晚一点点出来 */
+}
+
+/* 统一入场动画 */
+@keyframes slowDissolveDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+        filter: blur(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0px);
+    }
+}
+
+/* 容器：固定在屏幕，不随滚动走 */
+.hero-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 100vw;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-title {
+    color: #ffffff;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 100;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.8em;
+    text-indent: 0.8em; /* 修正歪斜 */
+    opacity: 0;
+    /* 1. 网页刷新后的进场动画 */
+    animation: slowDissolveDrop 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    
+    
+    /* 2. 调整位置：增加间距 */
+    margin-top: 4rem; /* 🔴 觉得太近就改大这个值，比如 5rem 或 6rem */
+    
+    opacity: 0;
+    animation: slowDissolveDrop 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.3s; /* 稍微错开 */
+}
+
+/* 入场动画保持原样 */
+@keyframes slowDissolveDrop {
+    0% { opacity: 0; transform: translateY(-30px); filter: blur(20px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+
+.hero-content {
+    position: fixed; /* 🔴 必须固定，才能做出“文字在原地炸开”的效果 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.hero-subtitle {
+    /* ... 其他样式 ... */
+    margin-top: 8rem; /* 🔴 这里拉开你想要的主副标题距离 */
+    display: block !important;
+}
