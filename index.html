@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HEYe｜eTHEREAL</title>
     <link type="text/css" href="static/css/main.css" rel="stylesheet" />
+    <style>
+        /* 1. Hero 标题炸裂时的定位与乱序修复 */
+        .hero-title, .hero-subtitle {
+            white-space: nowrap; /* 🔴 核心：强制禁止换行，防止字母乱跳 */
+            display: inline-block;
+            will-change: letter-spacing, filter, opacity, transform;
+        }
+
+        /* 2. Lightbox 空间模式样式 */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            z-index: 9999;
+            justify-content: center; align-items: center;
+            perspective: 2000px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .spatial-stage {
+            width: 90vw; height: 90vh;
+            position: relative; transform-style: preserve-3d;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none; /* 确保点击能穿透到父容器触发退出 */
+        }
+        .spatial-bg {
+            position: absolute; width: 110%; height: 110%;
+            z-index: 1; transform-style: preserve-3d;
+        }
+        .spatial-bg img { width: 100%; height: 100%; object-fit: contain; }
+        .spatial-text-layer {
+            position: absolute; bottom: 8%; right: 8%;
+            z-index: 10; text-align: right;
+            transform: translateZ(150px);
+        }
+        .spatial-text-layer h2 { font-size: clamp(2rem, 5vw, 4rem); letter-spacing: 0.5em; margin: 0; color: #000; }
+        .spatial-text-layer p { font-size: 1rem; opacity: 0.4; margin-top: 10px; letter-spacing: 0.2em; }
+    </style>
 </head>
 <body id="page-top">
 
@@ -18,286 +57,194 @@
     <div class="book-scroll-bg">
         <div class="page-pair work-full-width work0">
             <div class="full-page-container">
-            <div class="zoom-trigger">
-                <img src="static/assets/img/work0.jpg">
-            </div>
-
-            <div class="hero-content">
-                <h1 class="hero-title">HE YE</h1>
-                <p class="hero-subtitle">ethereal photograhpy</p>
+                <div class="zoom-trigger"><img src="static/assets/img/work0.jpg"></div>
+                <div class="hero-content">
+                    <h1 class="hero-title">HE YE</h1>
+                    <p class="hero-subtitle">ethereal photograhpy</p>
+                </div>
             </div>
         </div>
-    </div>
         
         <div class="page-pair">
-            <div class="full-page-container">
-                <div class="zoom-trigger"><img src="static/assets/img/work1.jpeg"></div>
-            </div>
+            <div class="full-page-container"><div class="zoom-trigger"><img src="static/assets/img/work1.jpeg"></div></div>
             <div class="right-page"></div>
         </div>
         
         <div class="page-pair work-spacing-row"> 
-            <div class="left-page full-hit">
-                <div class="zoom-trigger"><img src="static/assets/img/work2.jpeg"></div>
-        </div>
-            <div class="right-page full-hit">
-              <div class="zoom-trigger"><img src="static/assets/img/work3.jpeg"></div>
-        </div>
-       </div> <div class="page-pair work-spacing-row">
-          <div class="left-page full-hit">
-             <div class="zoom-trigger"><img src="static/assets/img/work4.jpeg"></div>
-        </div>
-           <div class="right-page full-hit">
-             <div class="zoom-trigger"><img src="static/assets/img/work5.jpeg"></div>
-        </div>
-      </div>
-            <div class="page-pair work-full-width">
-             <div class="full-page-container">
-            <div class="zoom-trigger"><img src="static/assets/img/work6.jpeg"></div>
-        </div>
-    </div>
-
-      <div class="complex-layout-78910">
-        <div class="side-item item-7">
-            <div class="zoom-trigger"><img src="static/assets/img/work7.jpeg"></div>
+            <div class="left-page full-hit"><div class="zoom-trigger"><img src="static/assets/img/work2.jpeg"></div></div>
+            <div class="right-page full-hit"><div class="zoom-trigger"><img src="static/assets/img/work3.jpeg"></div></div>
         </div>
 
-        <div class="middle-stack">
-            <div class="stack-top item-8">
-                <div class="zoom-trigger"><img src="static/assets/img/work8.jpeg"></div>
+        <div class="page-pair work-spacing-row">
+            <div class="left-page full-hit"><div class="zoom-trigger"><img src="static/assets/img/work4.jpeg"></div></div>
+            <div class="right-page full-hit"><div class="zoom-trigger"><img src="static/assets/img/work5.jpeg"></div></div>
+        </div>
+
+        <div class="page-pair work-full-width">
+            <div class="full-page-container"><div class="zoom-trigger"><img src="static/assets/img/work6.jpeg"></div></div>
+        </div>
+
+        <div class="complex-layout-78910">
+            <div class="side-item item-7"><div class="zoom-trigger"><img src="static/assets/img/work7.jpeg"></div></div>
+            <div class="middle-stack">
+                <div class="stack-top item-8"><div class="zoom-trigger"><img src="static/assets/img/work8.jpeg"></div></div>
+                <div class="stack-btm item-9"><div class="zoom-trigger"><img src="static/assets/img/work9.jpeg"></div></div>
+                <div class="stack-crease"></div>
             </div>
-    
-            <div class="stack-btm item-9">
-                <div class="zoom-trigger"><img src="static/assets/img/work9.jpeg"></div>
+            <div class="side-item item-10"><div class="zoom-trigger"><img src="static/assets/img/work10.jpeg"></div></div>
+        </div>
+
+        <div class="page-pair">
+            <div class="full-page-container">
+                <div class="zoom-trigger"><img src="static/assets/img/work11.jpeg"></div>
             </div>
-
-            <div class="stack-crease"></div>
+            <div class="right-page"></div>
         </div>
-
-        <div class="side-item item-10">
-            <div class="zoom-trigger"><img src="static/assets/img/work10.jpeg"></div>
-        </div>
-     </div>
-            
-
 
         <div id="information" class="profile-fold-container">
-    <div class="fold-left">
-        <p>PROFILE CONTACT :</p>
-    </div>
-    <div class="fold-right">
-        <p><strong>HE YE</strong></p>
-        <p>INSTAGRAM: <a href="https://www.instagram.com/heyethereal.9200" target="_blank" style="text-transform: none; color: inherit; text-decoration: none;">@heyethereal.9200</a></p>
-    </div>
-</div>
+            <div class="fold-left"><p>PROFILE CONTACT :</p></div>
+            <div class="fold-right">
+                <p><strong>HE YE</strong></p>
+                <p>INSTAGRAM: <a href="https://www.instagram.com/heyethereal.9200" target="_blank" style="text-transform: none; color: inherit; text-decoration: none;">@heyethereal.9200</a></p>
+            </div>
+        </div>
 
-<div id="index" class="page-pair index-section">
-        
-          <div class="left-page index-page-container">
-             <div class="index-row">
-                 <div class="index-item work-left"><img src="static/assets/img/work1.jpeg"><div class="meta"><strong>okutama, TOKYO</strong>japan</div></div>
-                 <div class="index-item work-right"><img src="static/assets/img/work2.jpeg"><div class="meta"><strong>okutama, tokyo</strong>japan</div></div>
-             </div>
-             <div class="index-row">
-                 <div class="index-item work-left"><img src="static/assets/img/work3.jpeg"><div class="meta"><strong>okutma, tokyo</strong>japan</div></div>
-                 <div class="index-item work-right"><img src="static/assets/img/work4.jpeg"><div class="meta"><strong>Sayram Lake, xinjiang</strong>china</div></div>
-             </div>
-         </div>
-
+        <div id="index" class="page-pair index-section">
+            <div class="left-page index-page-container">
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work1.jpeg"><div class="meta"><strong>okutama, TOKYO</strong>japan</div></div>
+                    <div class="index-item"><img src="static/assets/img/work2.jpeg"><div class="meta"><strong>okutama, tokyo</strong>japan</div></div>
+                </div>
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work3.jpeg"><div class="meta"><strong>okutma, tokyo</strong>japan</div></div>
+                    <div class="index-item"><img src="static/assets/img/work4.jpeg"><div class="meta"><strong>Sayram Lake, xinjiang</strong>china</div></div>
+                </div>
+            </div>
             <div class="right-page index-page-container">
-               <div class="index-row">
-                  <div class="index-item work-left"><img src="static/assets/img/work5.jpeg"><div class="meta"><strong>Kawakuchi Lake,yamanshina</strong>japan</div></div>
-                 <div class="index-item work-right"><img src="static/assets/img/work6.jpeg"><div class="meta"><strong>Kawakuchi Lake,yamanshina</strong>japan</div></div>
-             </div>
-              <div class="index-row">
-                  <div class="index-item work-left"><img src="static/assets/img/work7.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
-                 <div class="index-item work-right"><img src="static/assets/img/work8.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
-              </div>
-          </div>
-     </div>
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work5.jpeg"><div class="meta"><strong>Kawakuchi Lake,yamanshina</strong>japan</div></div>
+                    <div class="index-item"><img src="static/assets/img/work6.jpeg"><div class="meta"><strong>Kawakuchi Lake,yamanshina</strong>japan</div></div>
+                </div>
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work7.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
+                    <div class="index-item"><img src="static/assets/img/work8.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
+                </div>
+            </div>
+        </div>
 
         <div class="page-pair index-section">
-          <div class="left-page index-page-container">
-              <div class="index-row">
-                  <div class="index-item work-left"><img src="static/assets/img/work9.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
-                   <div class="index-item work-right"><img src="static/assets/img/work10.jpeg"><div class="meta"><strong>Tama River, tokyo</strong>japan</div></div>
-              </div>
-             <div class="index-row">
-                 <div class="index-item work-left"><img src="static/assets/img/work11.jpeg"><div class="meta"><strong>Okutama</strong>TOKYO</div></div>
-                 <div class="index-item work-right"><img src="static/assets/img/work12.jpeg"><div class="meta"><strong>Sayram Lake</strong>XIZANG</div></div>
-              </div>
-     </div>
-
-          <div class="right-page index-page-container">
+            <div class="left-page index-page-container">
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work9.jpeg"><div class="meta"><strong>Taklamakan Desert, xinjiang</strong>china</div></div>
+                    <div class="index-item"><img src="static/assets/img/work10.jpeg"><div class="meta"><strong>Tama River, tokyo</strong>japan</div></div>
+                </div>
+                <div class="index-row">
+                    <div class="index-item"><img src="static/assets/img/work11.jpeg"><div class="meta"><strong>arakawa</strong>TOKYO</div></div>
+                    <div class="index-item"><img src="static/assets/img/work12.jpeg"><div class="meta"><strong>Sayram Lake</strong>XIZANG</div></div>
+                </div>
+            </div>
+            <div class="right-page index-page-container"></div>
         </div>
-      </div>
-        
 
-          <footer class="site-footer">
-            <p>© 2024-2026 HE YE ALL RIGHTS RESERVED.</p>
-        </footer>
-
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'; document.body.style.overflow='auto';">
-        <img id="lightbox-img" src="">
+        <footer class="site-footer"><p>© 2024-2026 HE YE ALL RIGHTS RESERVED.</p></footer>
     </div>
 
-
+    <div id="lightbox"></div>
 
     <script>
+        // 1. 导航平滑滚动
         document.querySelector('.nav-left a').onclick = (e) => {
             e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'});
         };
+
+        // 2. Hero 标题滚动炸裂 (整合了居中补偿、缩放与模糊)
+        window.addEventListener('scroll', () => {
+            const content = document.querySelector('.hero-content');
+            const title = document.querySelector('.hero-title');
+            const subtitle = document.querySelector('.hero-subtitle');
+            if (!content || !title) return;
+
+            const scrollY = window.scrollY;
+            const isMobile = window.innerWidth < 768;
+            const fadeLimit = isMobile ? 400 : 600; 
+            const progress = Math.min(scrollY / fadeLimit, 1);
+            const multiplier = isMobile ? 2 : 5;
+
+            if (progress < 1) {
+                content.style.display = 'flex';
+                const tSp = 0.8 + (progress * multiplier);
+                
+                title.style.letterSpacing = `${tSp}em`;
+                title.style.textIndent = `${tSp}em`; // 🔴 补偿间距，保持视觉居中
+                title.style.opacity = 1 - (progress * 1.2);
+                title.style.filter = `blur(${progress * 15}px)`;
+                title.style.transform = `scale(${1 + progress * 0.5})`;
+
+                if (subtitle) {
+                    subtitle.style.opacity = 1 - (progress * 1.5);
+                    subtitle.style.letterSpacing = `${0.5 + progress * 2}em`;
+                    subtitle.style.transform = `scale(${1 + progress * 0.2})`;
+                }
+            } else {
+                content.style.display = 'none';
+            }
+        });
+
+        // 3. 核心：点开大图交互 (点击任意位置关闭)
         document.querySelectorAll('.zoom-trigger img').forEach(img => {
             img.onclick = function() {
                 const lb = document.getElementById('lightbox');
-                const lbImg = document.getElementById('lightbox-img');
-                lbImg.src = this.src;
+                lb.innerHTML = ''; 
+
+                // 点击 Lightbox 整体即关闭
+                lb.onclick = () => {
+                    lb.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                };
+
+                if (this.src.includes('work11')) {
+                    const stage = document.createElement('div');
+                    stage.className = 'spatial-stage';
+                    stage.innerHTML = `
+                        <div class="spatial-bg"><img src="${this.src}"></div>
+                        <div class="spatial-text-layer">
+                            <h2 style="font-family:'Newsreader',serif;">A FLEETING ETERNITY</h2>
+                            <p>OKUTAMA, 2024</p>
+                        </div>
+                    `;
+                    lb.appendChild(stage);
+                    
+                    // 裸眼 3D 交互
+                    lb.onmousemove = (e) => {
+                        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                        stage.querySelector('.spatial-bg img').style.transform = `translateX(${-x * 50}px) translateY(${-y * 50}px) scale(1.1)`;
+                        stage.querySelector('.spatial-text-layer').style.transform = `translateZ(150px) translateX(${x * 80}px) translateY(${y * 80}px)`;
+                    };
+                } else {
+                    const normalImg = document.createElement('img');
+                    normalImg.src = this.src;
+                    normalImg.style.maxWidth = '90%';
+                    normalImg.style.maxHeight = '90%';
+                    normalImg.style.objectFit = 'contain';
+                    lb.appendChild(normalImg);
+                    lb.onmousemove = null;
+                }
+
                 lb.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             };
         });
-    </script>
 
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // 只有当滚动到这个项目时，才添加类名启动 CSS 过渡
-                entry.target.classList.add('is-visible');
-            }
+        // 4. Index 项目进入动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.index-item').forEach(item => observer.observe(item));
         });
-    }, { 
-        threshold: 0.15 // 元素露出 15% 时触发效果
-    });
-
-    // 监听所有的 index-item
-    document.querySelectorAll('.index-item').forEach(item => {
-        observer.observe(item);
-    });
-});
-</script>
-
+    </script>
 </body>
 </html>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            console.log('检测到元素:', entry.target, '是否进入视口:', entry.isIntersecting); 
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    // 找到所有 index-item 并开始观察
-    const items = document.querySelectorAll('.index-item');
-    if(items.length === 0) {
-        console.warn("错误：未找到类名为 .index-item 的元素，请检查 HTML 结构！");
-    }
-    items.forEach(item => observer.observe(item));
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, { 
-        threshold: 0.05, // 哪怕露出一丁点（点击跳转瞬间）也要触发
-        rootMargin: "0px 0px 200px 0px" // 预留提前量，防止卡顿
-    });
-
-    const items = document.querySelectorAll('.index-item');
-    items.forEach(item => observer.observe(item));
-
-    // 特殊处理：如果用户点击 Nav 跳转，强制检查一次
-    window.addEventListener('hashchange', () => {
-        setTimeout(() => {
-            items.forEach(item => {
-                const rect = item.getBoundingClientRect();
-                if (rect.top < window.innerHeight) {
-                    item.classList.add('is-visible');
-                }
-            });
-        }, 300); // 延迟 300ms 等跳转滚动基本到位再溶解
-    });
-});
-</script>
-<script>
-window.addEventListener('scroll', () => {
-    const title = document.querySelector('.hero-title');
-    if (!title) return;
-
-    const scrollY = window.scrollY;
-    // 滚动 500 像素完成溶解
-    const progress = Math.min(scrollY / 500, 1); 
-
-    if (progress > 0) {
-        // 1. 字间距从 0.8em 炸裂到 3em
-        const spacing = 0.8 + (progress * 2.2);
-        title.style.letterSpacing = `${spacing}em`;
-        title.style.textIndent = `${spacing}em`;
-        
-        // 2. 透明度随滚动消失
-        title.style.opacity = 1 - progress;
-        
-        // 3. 产生轻微向上漂浮的位移感
-        const moveY = -50 - (progress * 100);
-        title.style.transform = `translate(-50%, ${moveY}%)`;
-        
-        // 4. 增加模糊溶解
-        title.style.filter = `blur(${progress * 15}px)`;
-    }
-});
-</script>
-
-<script>
-window.addEventListener('scroll', () => {
-    const content = document.querySelector('.hero-content');
-    const title = document.querySelector('.hero-title');
-    const subtitle = document.querySelector('.hero-subtitle');
-
-    if (!content || !title) return;
-
-    const scrollY = window.scrollY;
-    
-    // --- 1. 动态炸裂区（0px 到 600px 之间） ---
-    // 你可以把 600 改成你 Work 0 出现的大概位置
-    const fadeLimit = 600; 
-    const progress = Math.min(scrollY / fadeLimit, 1);
-
-    if (progress >= 0 && progress < 1) {
-        content.style.display = 'flex'; // 确保在上方时可见
-        content.style.opacity = '1';
-        
-        // 炸裂效果
-        const tSp = 0.8 + (progress * 4);
-        title.style.letterSpacing = `${tSp}em`;
-        title.style.textIndent = `${tSp}em`; // 🔴 修正歪斜
-        title.style.opacity = 1 - (progress * 1.2);
-        title.style.filter = `blur(${progress * 20}px)`;
-
-        if (subtitle) {
-            const sSp = 0.5 + (progress * 3);
-            subtitle.style.letterSpacing = `${sSp}em`;
-            subtitle.style.textIndent = `${sSp}em`;
-            subtitle.style.opacity = 1 - (progress * 1.5);
-        }
-    }
-
-    // --- 2. 彻底消失区（一旦超过 600px，也就是进入 Work 0 之后） ---
-    if (scrollY >= fadeLimit) {
-        content.style.opacity = '0';
-        content.style.display = 'none';      // 🔴 物理切断，绝对不会还在
-        content.style.visibility = 'hidden';
-    } else {
-        content.style.display = 'flex';
-        content.style.visibility = 'visible';
-    }
-});
-</script>

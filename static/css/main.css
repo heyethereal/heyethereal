@@ -849,3 +849,119 @@ body, html {
     margin-top: 8rem; /* 🔴 这里拉开你想要的主副标题距离 */
     display: block !important;
 }
+/* 针对手机端的专项优化 */
+@media (max-width: 768px) {
+    /* 1. 修正 Hero 文字容器：防止在手机上过大导致遮挡 */
+    .hero-content {
+        width: 90vw !important; /* 缩小宽度，防止字体炸开时超出屏幕 */
+        top: 45% !important;   /* 稍微往上提一点，给下方图片留空间 */
+    }
+
+    .hero-title {
+        font-size: 2.5rem !important; /* 手机端字体必须调小，否则 letter-spacing 一开就乱了 */
+        letter-spacing: 0.4em !important; /* 减小初始间距 */
+    }
+
+    .hero-subtitle {
+        margin-top: 3rem !important;  /* 缩小手机端的主副标题间距 */
+        font-size: 0.8rem !important;
+    }
+
+    /* 2. 修正作品集 Section：强制改为垂直单列排版 */
+    .index-section {
+        display: block !important;    /* 🔴 关键：取消 flex，让左右两页变成上下排列 */
+        width: 100% !important;
+        margin-bottom: 50px !important;
+    }
+
+    .index-page-container {
+        width: 100% !important;       /* 宽度占满，不再平分 */
+        padding: 0 20px;              /* 两侧留一点空隙 */
+    }
+
+    .index-row {
+        flex-direction: column !important; /* 让一行两张图变成一行一张图 */
+        gap: 20px !important;
+    }
+}
+
+/* --- WORK 11: 空间裸眼3D 彻底修正版 --- */
+
+.spatial-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff; /* 保持书页洁净 */
+}
+
+/* 舞台容器：维持你原本的书页比例，不打乱位置 */
+.spatial-card-wrap {
+    width: 85%; /* 适配书页感 */
+    max-width: 600px;
+    aspect-ratio: 3 / 4;
+    perspective: 2500px; /* 极大的透视距离，产生深邃感 */
+    position: relative;
+    overflow: hidden; /* 🔴 关键：锁死贴边，图片怎么动都不会出界 */
+}
+
+.spatial-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* 🔴 核心：图像层级处理 */
+.image-layer {
+    position: absolute;
+    top: -10%; left: -10%; /* 溢出 10%，为 3D 预留腾挪空间 */
+    width: 120%; height: 120%; 
+    z-index: 1;
+}
+
+.image-layer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 锁死填充 */
+    mix-blend-mode: multiply;
+    transition: transform 0.1s ease-out; /* 极其灵敏的物理响应 */
+}
+
+/* 🔴 核心：字体空间定位 (彻底修正位置错误) */
+.text-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 固定在底部 */
+    padding: 10% 8%; /* 相对边距，保证贴边感 */
+    pointer-events: none;
+    transform: translateZ(120px); /* 🔴 让文字大幅度前倾，产生裸眼3D */
+}
+
+.story-title {
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 0.9;
+    margin: 0 0 10px 0;
+    color: #000;
+    letter-spacing: 0.1em;
+    transform-style: preserve-3d;
+}
+
+/* 动态光照层：增加玻璃质感 */
+.spatial-glare {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 70%);
+    opacity: 0;
+    z-index: 20;
+    pointer-events: none;
+}
+.hero-title, .hero-subtitle {
+    white-space: nowrap;      /* 🔴 核心：强制禁止换行，防止乱序 */
+    display: inline-block;    /* 确保旋转和间距计算基于块体 */
+    will-change: letter-spacing, opacity, filter; /* 告诉浏览器提前优化这些属性 */
+}
